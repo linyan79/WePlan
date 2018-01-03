@@ -46,6 +46,25 @@ public class JFloor
   public JFloor()
   {
   }
+
+  public JCropRegion CropRegion;
+}
+
+[Serializable]
+public class JCropRegion
+{
+  public JTransform Trf;
+  public JXYZ CropMin;
+  public JXYZ CropMax;
+}
+
+[Serializable]
+public class JTransform
+{
+  public JXYZ BasisX;
+  public JXYZ BasisY;
+  public JXYZ BasisZ;
+  public JXYZ Origin;
 }
 
 [Serializable]

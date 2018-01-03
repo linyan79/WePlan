@@ -11,6 +11,7 @@ public class FloorMgr : MonoBehaviour {
   public float m_pixelH;
 
   public GameObject m_wall;
+  public GameObject m_floorImg;
 
   public TextAsset JTxt;
 
@@ -56,7 +57,11 @@ public class FloorMgr : MonoBehaviour {
       }
 
       // calculate floor Bounds and PixelPerUnit
-      FloorBDs = Utils.GetBounds(rmBds);
+      Vector3 cropMin = jFloor.CropRegion.CropMin.GetVct2d();
+      Vector3 cropMax = jFloor.CropRegion.CropMax.GetVct2d();
+      List<Vector3> crops = new List<Vector3>();
+      crops.Add(cropMin);crops.Add(cropMax);
+      FloorBDs = Utils.GetBounds(crops);
 
       CameraPercent = 0.8f;
       Vector2 floorCenter = FloorBDs.center;
@@ -69,6 +74,15 @@ public class FloorMgr : MonoBehaviour {
       Vector2 floorCorner0 = (FloorBDs.min - floorCenter3) / PixelPerUnit;
       Vector2 floorCorner1 = (FloorBDs.max - floorCenter3) / PixelPerUnit;
       Debug.DrawLine(floorCorner0, floorCorner1, Color.yellow, 10000f);
+
+      {
+        SpriteRenderer sr = m_floorImg.GetComponent<SpriteRenderer>();
+        Sprite sp = sr.sprite;
+        Vector3 rawSize = sp.bounds.size;
+
+        float scale = (float)(cropMax.x - cropMin.x) / PixelPerUnit / rawSize.x;
+        m_floorImg.transform.localScale = new Vector3(scale, scale, 1);
+      }
 
       foreach (JRoom jrm in jFloor.Rooms)
       {

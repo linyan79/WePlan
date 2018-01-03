@@ -36,19 +36,19 @@ public class CamAdjust : MonoBehaviour {
       }
     }
 
-    if(Input.GetKey(KeyCode.UpArrow))
+    if(Input.GetKey(KeyCode.DownArrow))
     {
       transform.position = transform.position + new Vector3(0, -Time.deltaTime * m_move_speed);
     }
-    else if (Input.GetKey(KeyCode.DownArrow))
+    else if (Input.GetKey(KeyCode.UpArrow))
     {
       transform.position = transform.position + new Vector3(0, Time.deltaTime * m_move_speed);
     }
-    else if (Input.GetKey(KeyCode.LeftArrow))
+    else if (Input.GetKey(KeyCode.RightArrow))
     {
       transform.position = transform.position + new Vector3(Time.deltaTime * m_move_speed, 0);
     }
-    else if (Input.GetKey(KeyCode.RightArrow))
+    else if (Input.GetKey(KeyCode.LeftArrow))
     {
       transform.position = transform.position + new Vector3(-Time.deltaTime * m_move_speed, 0);
     }
