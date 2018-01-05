@@ -1,4 +1,5 @@
-﻿using System;
+﻿using namudev;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,6 +17,8 @@ public class FloorMgr : MonoBehaviour {
   public TextAsset JTxt;
 
   public GameObject m_desk;
+
+  public PropertyGrid m_pGrid;
 
   string m_floorJson = null;
 
@@ -41,7 +44,20 @@ public class FloorMgr : MonoBehaviour {
   public Bounds FloorBDs { get; private set; }
   public float CameraPercent { get; private set; }
   public float PixelPerUnit { get; private set; }
-  public Room HighlightRoom { get; set; }
+  Room m_rm;
+  public Room HighlightRoom
+  {
+    get { return m_rm; }
+    set
+    {
+      m_rm = value;
+      if (null != m_rm)
+      {
+        m_pGrid.Clear();
+        m_pGrid.Populate(m_rm.m_jRoom);
+      }
+    }
+  }
 
   void ReadJSon()
   {
