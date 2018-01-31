@@ -11,6 +11,8 @@ public class FloorMgr : MonoBehaviour {
   public Canvas m_canves;
   public float m_pixelH;
 
+  public Font m_tagFont;
+
   public GameObject m_wall;
   public GameObject m_floorImg;
 
@@ -51,11 +53,6 @@ public class FloorMgr : MonoBehaviour {
     set
     {
       m_rm = value;
-      if (null != m_rm)
-      {
-        m_pGrid.Clear();
-        m_pGrid.Populate(m_rm.m_jRoom);
-      }
     }
   }
 

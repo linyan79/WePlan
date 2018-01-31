@@ -22,7 +22,7 @@ namespace namudev
 
             var inputField = controls.GetComponentInChildren<InputField>();
             inputField.text = Value;
-            inputField.onValueChange.AddListener((string value) => { Value = value; });
+            inputField.onValueChanged.AddListener((string value) => { Value = value; });
         }
     }
 }

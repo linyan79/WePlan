@@ -60,7 +60,11 @@ namespace namudev
 
             if (propertyGrid != null)
             {
-                propertyGrid.GetComponent<PropertyGrid>().Populate(selected);
+                Room rm = selected.GetComponent<Room>();
+                if (null != rm)
+                {
+                    propertyGrid.GetComponent<PropertyGrid>().Populate(rm.m_jRoom.PropertyList);
+                }
             }
         }
 

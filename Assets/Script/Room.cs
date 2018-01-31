@@ -96,10 +96,9 @@ public class Room : MonoBehaviour
 
       Text tx = m_txtObj.AddComponent<Text>();
       tx.text = tag;
-      Font arialFont = (Font)Resources.GetBuiltinResource(typeof(Font), "Arial.ttf");
-      tx.font = arialFont;
+      tx.font = m_floor.m_tagFont;
       tx.fontSize = 8;
-      tx.transform.position = Vector2.zero;
+      tx.rectTransform.position = Vector2.zero;
       tx.color = Color.black;
       tx.horizontalOverflow = HorizontalWrapMode.Overflow;
       tx.verticalOverflow = VerticalWrapMode.Overflow;

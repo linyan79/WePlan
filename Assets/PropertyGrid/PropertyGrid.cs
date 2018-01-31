@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -14,15 +13,18 @@ namespace namudev
     {
 #pragma warning disable 649
         [SerializeField]
-        private GameObject targetObject;
-        
+        public object targetObject;
+        // private GameObject targetObject;
+
         [SerializeField]
         private bool logging;
 #pragma warning restore 649
 
         private GameObject label;
         private GameObject scrollbar;
-        private Dictionary<Type,GameObject> itemTemplateMap;
+
+        private Dictionary<string, GameObject> itemTemplateMap;
+
         private List<GameObject> items;
 
 #if UNITY_EDITOR
@@ -81,7 +83,7 @@ namespace namudev
             }
 
             Type type = PropertyGridItem.TypeMap.FirstOrDefault(pair => pair.Value == typeof(T)).Key;
-            if (!itemTemplateMap.ContainsKey(type))
+            if (!itemTemplateMap.ContainsKey(type.FullName))
             {
                 string format = "No template found for type {0}";
                 string message = string.Format(format, type.Name);
@@ -89,14 +91,14 @@ namespace namudev
                 return default(T);
             }
 
-            GameObject item = Instantiate(itemTemplateMap[type]);
+            GameObject item = Instantiate(itemTemplateMap[type.FullName]);
             items.Add(item);
 
             PropertyGridBinding binding = item.AddComponent<PropertyGridBinding>();
             binding.Initialize(caption, value, type);
 
             item.name = caption;
-            item.transform.SetParent(itemTemplateMap[type].transform.parent);
+            item.transform.SetParent(itemTemplateMap[type.FullName].transform.parent);
             item.AddComponent<T>();
             item.SetActive(true);
 
@@ -137,22 +139,19 @@ namespace namudev
         {
             label = transform.Find("Scroll/Panel/Label").gameObject;
             scrollbar = transform.Find("Scrollbar").gameObject;
-            itemTemplateMap = new Dictionary<Type,GameObject>();
+            itemTemplateMap = new Dictionary<string, GameObject>();
             foreach (Transform t in transform.Find("Scroll/Panel"))
             {
                 var template = t.gameObject.GetComponent<PropertyGridTemplate>();
                 if (template != null)
                 {
-                    foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+                    string typeStr = template.Type;
+                    if (!string.IsNullOrEmpty(typeStr))
                     {
-                        Type type = assembly.GetType(template.Type);
-                        if (type != null)
-                        {
-                            itemTemplateMap[type] = t.gameObject;
-                            string format = "Matched template '{0}' with type '{1}' from assembly '{2}'";
-                            string message = string.Format(format, template.gameObject.name, type.Name, assembly.FullName);
-                            Log(message);
-                        }
+                        itemTemplateMap[typeStr] = t.gameObject;
+                        string format = "Matched template '{0}' with type '{1}' ";
+                        string message = string.Format(format, template.gameObject.name, typeStr);
+                        Log(message);
                     }
                 }
                 t.gameObject.SetActive(false);
@@ -167,28 +166,20 @@ namespace namudev
 
         private void AppendProperties(object obj, List<string> exclude = null)
         {
-            PropertyInfo[] properties = obj.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            foreach (PropertyInfo propertyInfo in properties)
+            List<PropertyData> propertyList = obj as List<PropertyData>;
+            if (null != propertyList)
             {
-                if (!propertyInfo.CanRead || (propertyInfo.GetGetMethod(false) == null))
+                foreach (PropertyData pp in propertyList)
                 {
-                    continue;
-                }
-                else if (!propertyInfo.CanWrite || (propertyInfo.GetSetMethod(false) == null))
-                {
-                    continue;
-                }
-                else if ((exclude == null) || !exclude.Contains(propertyInfo.Name))
-                {
-                    AppendProperty(obj, propertyInfo);
+                    AppendProperty(obj, pp);
                 }
             }
         }
 
-        private void AppendProperty(object obj, PropertyInfo propertyInfo)
+        private void AppendProperty(object obj, PropertyData propertyInfo)
         {
             Type key = null;
-            if (itemTemplateMap.ContainsKey(propertyInfo.PropertyType))
+            if (itemTemplateMap.ContainsKey(propertyInfo.PropertyType.FullName))
             {
                 key = propertyInfo.PropertyType;
             }
@@ -199,19 +190,19 @@ namespace namudev
             if (key == null)
             {
                 string format = "Skipped property '{0}' (no template found for type '{1}')";
-                string message = string.Format(format, propertyInfo.Name, propertyInfo.PropertyType.Name);
+                string message = string.Format(format, propertyInfo.PropertyName, propertyInfo.PropertyType.Name);
                 Log(message);
                 return;
             }
 
-            GameObject item = Instantiate(itemTemplateMap[key]);
+            GameObject item = Instantiate(itemTemplateMap[key.FullName]);
             items.Add(item);
 
             PropertyGridBinding binding = item.AddComponent<PropertyGridBinding>();
             binding.Initialize(obj, propertyInfo);
 
-            item.name = propertyInfo.Name;
-            item.transform.SetParent(itemTemplateMap[key].transform.parent);
+            item.name = propertyInfo.PropertyName;
+            item.transform.SetParent(itemTemplateMap[key.FullName].transform.parent);
             item.AddComponent(PropertyGridItem.TypeMap[key]);
             item.SetActive(true);
         }
@@ -222,6 +213,20 @@ namespace namudev
             {
                 Debug.Log("[PROPERTYGRID] " + message);
             }
+        }
+
+        public Canvas m_canvas;
+        public Camera m_camera;
+        void Update()
+        {
+            //float camHeight = m_camera.orthographicSize *2f;
+            Vector3 camTopRight =  new Vector3(m_camera.pixelWidth * 0.5f, m_camera.pixelHeight * 0.5f);
+            Vector3 topRight = Utils.Cam2PixCoord(m_camera.transform.position, m_camera, m_canvas) + camTopRight;
+
+            RectTransform rectTrf = GetComponent<RectTransform>();
+            rectTrf.localPosition = camTopRight - (Vector3)Utils.Cam2PixCoord(rectTrf.sizeDelta * 0.5f, m_camera, m_canvas);
+
+            // Debug.Log(rectTrf.position.ToString());
         }
     }
 }

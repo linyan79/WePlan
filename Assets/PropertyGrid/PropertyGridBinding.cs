@@ -1,5 +1,4 @@
 using System;
-using System.Reflection;
 using UnityEngine;
 
 namespace namudev
@@ -10,10 +9,10 @@ namespace namudev
 
         public string Caption { get; private set; }
         public object Value { get; private set; }
-        public Type ValueType { get; private set; } 
+        public Type ValueType { get; private set; }
 
         private object targetObject;
-        private PropertyInfo propertyInfo;
+        private PropertyData propertyInfo;
 
         public void Initialize(string caption, object value, Type valueType)
         {
@@ -22,12 +21,12 @@ namespace namudev
             ValueType = valueType;
         }
 
-        public void Initialize(object targetObject, PropertyInfo propertyInfo)
+        public void Initialize(object targetObject, PropertyData propertyInfo)
         {
             this.targetObject = targetObject;
             this.propertyInfo = propertyInfo;
-            Caption = propertyInfo.Name;
-            Value = propertyInfo.GetValue(targetObject, null);
+            Caption = propertyInfo.PropertyName;
+            Value = propertyInfo.GeneralValue;
             ValueType = propertyInfo.PropertyType;
         }
 
@@ -42,7 +41,7 @@ namespace namudev
                 }
                 if ((targetObject != null) && (propertyInfo != null))
                 {
-                    propertyInfo.SetValue(targetObject, Value, null);
+                    propertyInfo.GeneralValue = Value;
                 }
             }
         }

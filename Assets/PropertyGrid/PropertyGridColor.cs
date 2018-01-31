@@ -28,22 +28,22 @@ namespace namudev
 
             InputField r = inputFieldR.GetComponentInChildren<InputField>();
             r.text = Value.r.ToString();
-            r.onValueChange.AddListener(OnValueChangeR);
+            r.onValueChanged.AddListener(OnValueChangeR);
             r.onEndEdit.AddListener(OnEndEditR);
 
             InputField g = inputFieldG.GetComponentInChildren<InputField>();
             g.text = Value.g.ToString();
-            g.onValueChange.AddListener(OnValueChangeG);
+            g.onValueChanged.AddListener(OnValueChangeG);
             g.onEndEdit.AddListener(OnEndEditG);
 
             InputField b = inputFieldB.GetComponentInChildren<InputField>();
             b.text = Value.b.ToString();
-            b.onValueChange.AddListener(OnValueChangeB);
+            b.onValueChanged.AddListener(OnValueChangeB);
             b.onEndEdit.AddListener(OnEndEditB);
 
             InputField a = inputFieldA.GetComponentInChildren<InputField>();
             a.text = Value.a.ToString();
-            a.onValueChange.AddListener(OnValueChangeA);
+            a.onValueChanged.AddListener(OnValueChangeA);
             a.onEndEdit.AddListener(OnEndEditA);
         }
 
@@ -60,9 +60,9 @@ namespace namudev
         private void OnEndEditR(string str)
         {
             InputField r = inputFieldR.GetComponentInChildren<InputField>();
-            r.onValueChange.RemoveListener(OnValueChangeR);
+            r.onValueChanged.RemoveListener(OnValueChangeR);
             r.text = Value.r.ToString();
-            r.onValueChange.AddListener(OnValueChangeR);
+            r.onValueChanged.AddListener(OnValueChangeR);
         }
 
         private void OnValueChangeG(string str)
@@ -78,9 +78,9 @@ namespace namudev
         private void OnEndEditG(string str)
         {
             InputField g = inputFieldG.GetComponentInChildren<InputField>();
-            g.onValueChange.RemoveListener(OnValueChangeG);
+            g.onValueChanged.RemoveListener(OnValueChangeG);
             g.text = Value.g.ToString();
-            g.onValueChange.AddListener(OnValueChangeG);
+            g.onValueChanged.AddListener(OnValueChangeG);
         }
 
         private void OnValueChangeB(string str)
@@ -96,9 +96,9 @@ namespace namudev
         private void OnEndEditB(string str)
         {
             InputField b = inputFieldB.GetComponentInChildren<InputField>();
-            b.onValueChange.RemoveListener(OnValueChangeB);
+            b.onValueChanged.RemoveListener(OnValueChangeB);
             b.text = Value.b.ToString();
-            b.onValueChange.AddListener(OnValueChangeB);
+            b.onValueChanged.AddListener(OnValueChangeB);
         }
 
         private void OnValueChangeA(string str)
@@ -114,9 +114,9 @@ namespace namudev
         private void OnEndEditA(string str)
         {
             InputField a = inputFieldA.GetComponentInChildren<InputField>();
-            a.onValueChange.RemoveListener(OnValueChangeA);
+            a.onValueChanged.RemoveListener(OnValueChangeA);
             a.text = Value.a.ToString();
-            a.onValueChange.AddListener(OnValueChangeA);
+            a.onValueChanged.AddListener(OnValueChangeA);
         }
     }
 }

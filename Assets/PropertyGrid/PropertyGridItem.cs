@@ -35,7 +35,10 @@ namespace namudev
 
         public T Value
         {
-            get { return (T)binding.Value; }
+            get
+            {
+                return (T)binding.Value;
+            }
             protected set { binding.SetValue(value); }
         }
 

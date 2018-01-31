@@ -22,7 +22,7 @@ namespace namudev
 
             var inputField = controls.GetComponentInChildren<InputField>();
             inputField.text = Value.ToString();
-            inputField.onValueChange.AddListener(OnValueChange);
+            inputField.onValueChanged.AddListener(OnValueChange);
             inputField.onEndEdit.AddListener(OnEndEdit);
         }
 
@@ -38,9 +38,9 @@ namespace namudev
         private void OnEndEdit(string str)
         {
             var inputField = controls.GetComponentInChildren<InputField>();
-            inputField.onValueChange.RemoveListener(OnValueChange);
+            inputField.onValueChanged.RemoveListener(OnValueChange);
             inputField.text = Value.ToString();
-            inputField.onValueChange.AddListener(OnValueChange);
+            inputField.onValueChanged.AddListener(OnValueChange);
         }
     }
 }
